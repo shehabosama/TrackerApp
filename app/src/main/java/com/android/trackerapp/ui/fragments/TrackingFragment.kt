@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_traking.*
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.round
 
 @AndroidEntryPoint
@@ -38,7 +39,8 @@ class TrackingFragment :Fragment(R.layout.fragment_traking) {
     private var map :GoogleMap?=null
     private var  isTraacking = false
     private var currentTimeMillis = 0L
-    private var wight = 80f
+    @set:Inject
+    var wight = 80f
     private var pathPoint = mutableListOf<Polyline>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -98,6 +100,7 @@ class TrackingFragment :Fragment(R.layout.fragment_traking) {
             val avgSpeed = round((distanceInMeters / 1000f) / (currentTimeMillis/1000f/60/60) *10 )/10f
             val dateTimestamp = Calendar.getInstance().timeInMillis
             val caloriesBurned = ((distanceInMeters /1000f) * wight).toInt()
+
             val run = Run(bmp,dateTimestamp,avgSpeed,distanceInMeters,currentTimeMillis,caloriesBurned)
             viewModel.insertRun(run)
             Snackbar.make(
